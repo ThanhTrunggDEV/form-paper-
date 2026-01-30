@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.env
+*.egg-info/
+
+# Flask & Project specific
+instance/
+.webassets-cache
+springer_formatter/temp_files/
+springer_formatter/output/
+springer_formatter/templates_storage/
+
+# System
+.DS_Store
+Thumbs.db

@@ -1,0 +1,7 @@
+Flask==3.0.0
+python-docx==1.1.0
+Pillow==10.1.0
+opencv-python==4.8.1.78
+docx2pdf==0.1.8
+python-magic-bin==0.4.14
+Werkzeug==3.0.1

@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Springer LNCS Auto-Formatter</title>
+    <meta name="description" content="Automatically format your research papers to Springer LNCS format">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <span class="logo-icon">📄</span>
+                    <h1>Springer LNCS <span class="highlight">Auto-Formatter</span></h1>
+                </div>
+                <div class="header-actions">
+                    <span class="status-badge" id="status-badge">
+                        <span class="status-dot"></span>
+                        Ready
+                    </span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Sidebar -->
+            <aside class="sidebar" id="sidebar">
+                <div class="sidebar-section">
+                    <h3>📐 Format Settings</h3>
+                    
+                    <!-- Template Selection -->
+                    <div class="setting-group">
+                        <label for="template-select">Template</label>
+                        <select id="template-select" class="setting-input">
+                            <option value="springer_lncs" selected>Springer LNCS</option>
+                            <option value="ieee">IEEE Conference</option>
+                            <option value="acm">ACM SIG</option>
+                        </select>
+                    </div>
+
+                    <!-- Font Settings -->
+                    <div class="setting-group">
+                        <label for="font-select">Font Family</label>
+                        <select id="font-select" class="setting-input">
+                            <option value="Times New Roman" selected>Times New Roman</option>
+                            <option value="Arial">Arial</option>
+                            <option value="Cambria">Cambria</option>
+                        </select>
+                    </div>
+
+                    <!-- Section Numbers -->
+                    <div class="setting-group checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="section-numbers" checked>
+                            <span class="checkbox-custom"></span>
+                            Auto Section Numbers
+                        </label>
+                    </div>
+
+                    <!-- Auto-detect Sections -->
+                    <div class="setting-group checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="auto-detect" checked>
+                            <span class="checkbox-custom"></span>
+                            Auto-detect Sections
+                        </label>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3>🖼️ Image Settings</h3>
+                    
+                    <!-- Image Width -->
+                    <div class="setting-group">
+                        <label for="img-width">Image Width</label>
+                        <div class="range-container">
+                            <input type="range" id="img-width" min="50" max="100" value="80" class="range-input">
+                            <span class="range-value" id="img-width-value">80%</span>
+                        </div>
+                    </div>
+
+                    <!-- Auto Caption -->
+                    <div class="setting-group checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="auto-caption" checked>
+                            <span class="checkbox-custom"></span>
+                            Auto Generate Captions
+                        </label>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3>📏 Page Layout</h3>
+                    
+                    <!-- Margins -->
+                    <div class="setting-group">
+                        <label>Margins (cm)</label>
+                        <div class="margin-inputs">
+                            <input type="number" id="margin-top" value="2.5" step="0.1" min="1" max="5" class="margin-input" title="Top">
+                            <input type="number" id="margin-bottom" value="2.5" step="0.1" min="1" max="5" class="margin-input" title="Bottom">
+                            <input type="number" id="margin-left" value="2.5" step="0.1" min="1" max="5" class="margin-input" title="Left">
+                            <input type="number" id="margin-right" value="2.5" step="0.1" min="1" max="5" class="margin-input" title="Right">
+                        </div>
+                        <span class="setting-hint">Top, Bottom, Left, Right</span>
+                    </div>
+
+                    <!-- Line Spacing -->
+                    <div class="setting-group">
+                        <label for="line-spacing">Line Spacing</label>
+                        <select id="line-spacing" class="setting-input">
+                            <option value="1.0" selected>Single (1.0)</option>
+                            <option value="1.15">1.15</option>
+                            <option value="1.5">1.5</option>
+                            <option value="2.0">Double (2.0)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary sidebar-btn" onclick="applySettings()">
+                    ✨ Apply Settings
+                </button>
+            </aside>
+
+            <!-- Content Area -->
+            <div class="content-area">
+                <!-- Upload Section -->
+                <section class="upload-section" id="upload-section">
+                    <div class="upload-cards">
+                        <!-- Document Upload -->
+                        <div class="upload-card">
+                            <div class="upload-dropzone" id="doc-dropzone">
+                                <div class="dropzone-content">
+                                    <span class="dropzone-icon">📄</span>
+                                    <h4>Upload Document</h4>
+                                    <p>Drag & drop your paper (.docx, .txt)</p>
+                                    <span class="dropzone-hint">or click to browse</span>
+                                </div>
+                                <input type="file" id="doc-input" accept=".docx,.doc,.txt" hidden>
+                            </div>
+                            <div class="upload-file-info" id="doc-info" style="display: none;">
+                                <span class="file-icon">📄</span>
+                                <span class="file-name" id="doc-name"></span>
+                                <button class="btn-remove" onclick="removeDocument()">×</button>
+                            </div>
+                        </div>
+
+                        <!-- Images Upload -->
+                        <div class="upload-card">
+                            <div class="upload-dropzone" id="img-dropzone">
+                                <div class="dropzone-content">
+                                    <span class="dropzone-icon">🖼️</span>
+                                    <h4>Upload Images</h4>
+                                    <p>Drag & drop figures (.png, .jpg)</p>
+                                    <span class="dropzone-hint">Multiple files supported</span>
+                                </div>
+                                <input type="file" id="img-input" accept=".png,.jpg,.jpeg,.tiff,.bmp" multiple hidden>
+                            </div>
+                            <div class="upload-images-list" id="images-list"></div>
+                        </div>
+
+                        <!-- Template Upload (Optional) -->
+                        <div class="upload-card upload-card-small">
+                            <div class="upload-dropzone upload-dropzone-small" id="template-dropzone">
+                                <div class="dropzone-content">
+                                    <span class="dropzone-icon">📋</span>
+                                    <h4>Custom Template</h4>
+                                    <p class="optional-tag">Optional</p>
+                                </div>
+                                <input type="file" id="template-input" accept=".docx,.docm" hidden>
+                            </div>
+                            <div class="upload-file-info" id="template-info" style="display: none;">
+                                <span class="file-icon">📋</span>
+                                <span class="file-name" id="template-name"></span>
+                                <button class="btn-remove" onclick="removeTemplate()">×</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="action-buttons">
+                        <button class="btn btn-large btn-primary" id="process-btn" onclick="processDocument()" disabled>
+                            <span class="btn-icon">⚡</span>
+                            Process Document
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Processing Section -->
+                <section class="processing-section" id="processing-section" style="display: none;">
+                    <div class="processing-card">
+                        <div class="processing-spinner"></div>
+                        <h3>Processing your document...</h3>
+                        <p id="processing-status">Analyzing document structure</p>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progress-fill"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Preview Section -->
+                <section class="preview-section" id="preview-section" style="display: none;">
+                    <!-- Preview Header -->
+                    <div class="preview-header">
+                        <div class="preview-tabs">
+                            <button class="tab-btn active" onclick="switchTab('formatted')">Formatted</button>
+                            <button class="tab-btn" onclick="switchTab('comparison')">Comparison</button>
+                            <button class="tab-btn" onclick="switchTab('changes')">Changes</button>
+                        </div>
+                        <div class="preview-actions">
+                            <button class="btn btn-secondary" onclick="resetProcess()">
+                                ↺ Start Over
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Preview Content -->
+                    <div class="preview-panels">
+                        <!-- Formatted Preview -->
+                        <div class="preview-panel" id="formatted-panel">
+                            <div class="document-preview" id="document-preview">
+                                <!-- Preview content will be inserted here -->
+                            </div>
+                        </div>
+
+                        <!-- Comparison Panel -->
+                        <div class="preview-panel" id="comparison-panel" style="display: none;">
+                            <div class="comparison-container">
+                                <div class="comparison-side">
+                                    <h4>Original</h4>
+                                    <div class="comparison-content" id="original-content">
+                                        <!-- Original content -->
+                                    </div>
+                                </div>
+                                <div class="comparison-divider"></div>
+                                <div class="comparison-side">
+                                    <h4>Formatted (Springer LNCS)</h4>
+                                    <div class="comparison-content" id="formatted-content">
+                                        <!-- Formatted content -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Changes Panel -->
+                        <div class="preview-panel" id="changes-panel" style="display: none;">
+                            <div class="changes-list" id="changes-list">
+                                <!-- Changes will be listed here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Download Section -->
+                    <div class="download-section">
+                        <div class="download-summary" id="download-summary">
+                            <!-- Summary stats will be shown here -->
+                        </div>
+                        <div class="download-buttons">
+                            <button class="btn btn-download btn-docx" onclick="downloadFile('docx')">
+                                <span class="btn-icon">📄</span>
+                                Download DOCX
+                            </button>
+                            <button class="btn btn-download btn-pdf" onclick="downloadFile('pdf')">
+                                <span class="btn-icon">📕</span>
+                                Download PDF
+                            </button>
+                            <button class="btn btn-download btn-zip" onclick="downloadFile('zip')">
+                                <span class="btn-icon">📦</span>
+                                Download All (ZIP)
+                            </button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Springer LNCS Auto-Formatter &copy; 2026 • Format your research papers with ease</p>
+        </footer>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="/static/js/main.js"></script>
+</body>
+</html>
