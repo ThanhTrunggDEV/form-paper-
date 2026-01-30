@@ -24,7 +24,7 @@ app.config['UPLOAD_FOLDER'] = os.path.join(os.path.dirname(__file__), 'temp_file
 app.config['OUTPUT_FOLDER'] = os.path.join(os.path.dirname(__file__), 'output')
 app.config['TEMPLATES_FOLDER'] = os.path.join(os.path.dirname(__file__), 'templates_storage')
 app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024  # 50MB max file size
-app.config['ALLOWED_DOC_EXTENSIONS'] = {'docx', 'doc', 'txt'}
+app.config['ALLOWED_DOC_EXTENSIONS'] = {'docx', 'txt'}
 app.config['ALLOWED_IMAGE_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'tiff', 'tif', 'bmp'}
 
 # Create necessary directories
